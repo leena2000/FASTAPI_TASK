@@ -1,5 +1,5 @@
-from src.routers.address import address_app
-from src.routers.customer import customer_app
+from src.routers.address_routes import address_app
+from src.routers.customer_routes import customer_app
 from fastapi import FastAPI
 
 app = FastAPI()
