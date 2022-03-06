@@ -2,14 +2,13 @@ from src.db.cutsomer_db import fake_customer_db
 from src.db.address_db import fake_address_db
 from src.models.customer import Customer, CustomerIn
 
-def create_customer(user: CustomerIn) -> dict:
+def create_customer(customer: CustomerIn) -> dict:
     """
     Create new customer and new address for the customer,
     return new customer information
 
     Args:
-        user (UserCustomer): customer
-        address (UserAddress): customer address
+        customer (CustomerIn): customer Information
 
     Returns:
         dict: customers information
@@ -19,7 +18,7 @@ def create_customer(user: CustomerIn) -> dict:
     #2. new address id
     address_id = fake_address_db[-1]['id'] + 1
     #3. create and add user with address id to customer table
-    new_user = user.dict()
+    new_user = customer.dict()
     # return ""
     new_user['id'] = customer_id
     #$. create and add address to address table
@@ -47,37 +46,37 @@ def get_customers() -> dict:
     """
     return fake_customer_db
 
-def get_customer_information(get_id: int) -> dict:
+def get_customer_information(id: int) -> dict:
     """
     Return customer information for a given customer id
 
     Args:
-        get_id (int): customer id
+        id (int): customer id
 
     Returns:
         dict: customer information for a given id
     """
     for customer, index in zip(fake_customer_db, range(len(fake_customer_db))):
-        if customer["id"] == get_id:
+        if customer["id"] == id:
             return fake_customer_db[index]
 
-def update_customer(get_id: int, user: CustomerIn) -> dict:
+def update_customer(id: int, customer: CustomerIn) -> dict:
     """
     Update customer information by customer id,
     return customers information
 
     Args:
-        get_id (int): customer id
-        user (UserCustomer): customer
+        id (int): customer id
+        customer (CustomerIn): customer Information
 
     Returns:
         dict: customers information
     """
     for customer, index in zip(fake_customer_db, range(len(fake_customer_db))):
-        if customer["id"] == get_id:
+        if customer["id"] == id:
             customer_address = fake_customer_db[index]['address_id']
-            fake_customer_db[index] = user.dict()
-            fake_customer_db[index]['id'] = get_id
+            fake_customer_db[index] = customer.dict()
+            fake_customer_db[index]['id'] = id
             fake_customer_db[index]['address_id'] = customer_address
             updated_address = fake_customer_db[index]['address']
             del fake_customer_db[index]['address']
@@ -86,23 +85,23 @@ def update_customer(get_id: int, user: CustomerIn) -> dict:
             fake_address_db[index] = updated_address
     return fake_customer_db
 
-def delete_customer(get_id: int) -> dict:
+def delete_customer(id: int) -> dict:
     """
     Delete customer by customer id,
     delete customer address by a given customer id,
     return customers information
 
     Args:
-        get_id (int): customer id
+        id (int): customer id
 
     Returns:
         dict: customers information
     """
     for customer, index in zip(fake_customer_db, range(len(fake_customer_db))):
-        if customer["id"] == get_id:
+        if customer["id"] == id:
             del fake_customer_db[index]
     for address, index in zip(fake_address_db, range(len(fake_address_db))):
-        if address["id"] == get_id:
+        if address["id"] == id:
             del fake_address_db[index]
             
     return fake_customer_db
