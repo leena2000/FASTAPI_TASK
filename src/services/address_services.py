@@ -8,7 +8,7 @@ def create_address(address: AddressIn) -> dict:
     return customers addresses information
 
     Args:
-        address (AddressIn): customer address
+        address (Address): customer address
 
     Returns:
         dict: customers addresses information
@@ -74,13 +74,12 @@ def update_customer_address(id: int, address: AddressIn) -> dict:
     Returns:
         dict: customers addresses information
     """
-    for address, index in zip(fake_address_db, range(len(fake_address_db))):
-        if address["id"] == id:
-            address_id = fake_address_db[index]['id']
-            fake_address_db[index] = address.dict()
-            fake_address_db[index]['id'] = address_id
-            
-    return fake_address_db
+    updated_address = address.dict()
+    for customer_address in fake_address_db:
+        if customer_address['id'] == id:
+            customer_address = updated_address
+            customer_address['id'] = id
+            return customer_address           
 
 def delete_customer_address(id: int) -> dict:
     """
@@ -94,12 +93,14 @@ def delete_customer_address(id: int) -> dict:
     Returns:
         dict: customers addresses information
     """
-    for address, index in zip(fake_address_db, range(len(fake_address_db))):
+    for address in fake_address_db:
         if address["id"] == id:
-            del fake_address_db[index]
-    for customer, index in zip(fake_customer_db, range(len(fake_customer_db))):
+            deleted_address = address
+            deleted_address['id'] = id
+            del address
+    for customer in fake_customer_db:
         if customer["id"] == id:
-            del fake_customer_db[index]
+            del customer
             
-    return fake_address_db
+    return deleted_address
     

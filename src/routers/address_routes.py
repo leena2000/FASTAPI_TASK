@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter
 from src.models.address import Address, AddressIn
 from src.services.address_services import create_address, get_customer_address_customer_id,get_customer_address_address_id, get_addresses, update_customer_address, delete_customer_address
@@ -19,7 +20,7 @@ def get_customer_address_by_customer_id(id: int):
 def get_customer_address_by_address_id(id: int):
     return get_customer_address_address_id(id)
 
-@address_app.get("/", response_model= Address)
+@address_app.get("/", response_model= List[Address])
 def get_all_addresses():
     return get_addresses()
 

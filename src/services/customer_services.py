@@ -1,3 +1,4 @@
+from copy import deepcopy
 from src.db.cutsomer_db import fake_customer_db
 from src.db.address_db import fake_address_db
 from src.models.customer import Customer, CustomerIn
@@ -35,16 +36,23 @@ def create_customer(customer: CustomerIn) -> dict:
     del response['address_id']
     response['address'] = new_address
 
-    return Customer(**response)
+    return response
 
 def get_customers() -> dict:
+    
     """
     Return all customers information
 
     Returns:
         dict: customers information
     """
-    return fake_customer_db
+    customers = deepcopy(fake_customer_db)
+    for customer in customers:
+        for address in fake_address_db:
+            if address['id'] == customer['address_id']:
+                customer['address'] = address
+        del customer['address_id']
+    return customers
 
 def get_customer_information(id: int) -> dict:
     """
@@ -56,9 +64,16 @@ def get_customer_information(id: int) -> dict:
     Returns:
         dict: customer information for a given id
     """
-    for customer, index in zip(fake_customer_db, range(len(fake_customer_db))):
+    for customer in fake_customer_db:
         if customer["id"] == id:
-            return fake_customer_db[index]
+            result = customer.copy()
+            address = next(filter(lambda x: x['id'] == customer['address_id'], fake_address_db)).copy()
+    
+            result['address'] = address
+            del result['address_id']
+
+            return result
+    
 
 def update_customer(id: int, customer: CustomerIn) -> dict:
     """
@@ -72,18 +87,18 @@ def update_customer(id: int, customer: CustomerIn) -> dict:
     Returns:
         dict: customers information
     """
-    for customer, index in zip(fake_customer_db, range(len(fake_customer_db))):
-        if customer["id"] == id:
-            customer_address = fake_customer_db[index]['address_id']
-            fake_customer_db[index] = customer.dict()
-            fake_customer_db[index]['id'] = id
-            fake_customer_db[index]['address_id'] = customer_address
-            updated_address = fake_customer_db[index]['address']
-            del fake_customer_db[index]['address']
-    for address, index in zip(fake_address_db, range(len(fake_address_db))):
-        if address['id'] == customer_address:
-            fake_address_db[index] = updated_address
-    return fake_customer_db
+    updated_user = customer.dict()
+    for user in fake_customer_db:
+        if user['id'] == id:
+            user_address = user['address_id']
+            user = updated_user
+            user['address']['id']= user_address
+            user['id'] = id
+            updated_address = user['address']
+            for address in fake_address_db:
+                if address['id'] == user_address:
+                    address = updated_address
+            return user
 
 def delete_customer(id: int) -> dict:
     """
@@ -97,11 +112,16 @@ def delete_customer(id: int) -> dict:
     Returns:
         dict: customers information
     """
-    for customer, index in zip(fake_customer_db, range(len(fake_customer_db))):
+
+    for customer in fake_customer_db:
         if customer["id"] == id:
-            del fake_customer_db[index]
-    for address, index in zip(fake_address_db, range(len(fake_address_db))):
-        if address["id"] == id:
-            del fake_address_db[index]
-            
-    return fake_customer_db
+            address_id = customer['address_id']
+            for address in fake_address_db:
+                if address["id"] == address_id:
+                    deleted_address = address
+                    del address
+            deleted_customer = customer
+            deleted_customer['id'] = id
+            deleted_customer['address_id'] = deleted_address
+            del customer
+            return deleted_customer
