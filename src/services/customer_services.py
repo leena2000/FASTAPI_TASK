@@ -95,12 +95,13 @@ def update_customer(id: int, customer: CustomerIn) -> dict:
             fake_customer_db[index] = updated_customer
             fake_customer_db[index]['address']['id'] = address_id
             fake_customer_db[index]['id'] = id
-            user['address_id'] = address_id
-            updated_address = user['address']
-            for index, customer_address in enumerate(fake_address_db):
-                if customer_address['id'] == address_id:
-                    fake_address_db[index] = updated_address
-                    fake_address_db[index]['id'] = address_id
+            fake_customer_db[index]['address_id'] = address_id
+            # updated_address = fake_customer_db[index]['address']
+            # for index, customer_address in enumerate(fake_address_db):
+            #     if customer_address['id'] == address_id:
+            #         fake_address_db[index]['id'] = address_id
+            #         fake_address_db[index] = customer.address
+                    
             
             return fake_customer_db[index]  
 
