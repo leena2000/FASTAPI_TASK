@@ -32,12 +32,12 @@ def get_customer_address_customer_id(id: int)-> dict:
     Returns:
         dict: customers addresses information for a given customer id
     """
-    for customer, index in zip(fake_customer_db, range(len(fake_customer_db))):
+    for customer in fake_customer_db:
         if customer["id"] == id:
             customer_address = customer['address_id']
-    for address, index in zip(fake_address_db, range(len(fake_address_db))):
+    for address in fake_address_db:
         if address["id"] == customer_address:
-            return fake_address_db[index]
+            return address
 
 def get_customer_address_address_id(id: int) -> dict:
     """
@@ -49,9 +49,9 @@ def get_customer_address_address_id(id: int) -> dict:
     Returns:
         dict: customers addresses information for a given address id
     """
-    for address, index in zip(fake_address_db, range(len(fake_address_db))):
+    for address in fake_address_db:
         if address["id"] == id:
-            return fake_address_db[index]
+            return address
 
 def get_addresses() -> dict:
     """
