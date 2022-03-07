@@ -75,11 +75,11 @@ def update_customer_address(id: int, address: AddressIn) -> dict:
         dict: customers addresses information
     """
     updated_address = address.dict()
-    for customer_address in fake_address_db:
+    for index, customer_address in enumerate(fake_address_db):
         if customer_address['id'] == id:
-            customer_address = updated_address
-            customer_address['id'] = id
-            return customer_address           
+            fake_address_db[index] = updated_address
+            fake_address_db[index]['id'] = id
+            return fake_address_db[index]         
 
 def delete_customer_address(id: int) -> dict:
     """
@@ -97,10 +97,11 @@ def delete_customer_address(id: int) -> dict:
         if address["id"] == id:
             deleted_address = address
             deleted_address['id'] = id
-            del address
+            fake_address_db.remove(address)
+            
     for customer in fake_customer_db:
         if customer["id"] == id:
-            del customer
+            fake_customer_db.remove(customer)
             
     return deleted_address
     

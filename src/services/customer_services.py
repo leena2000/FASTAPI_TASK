@@ -1,4 +1,5 @@
 from copy import deepcopy
+from unittest import result
 from src.db.cutsomer_db import fake_customer_db
 from src.db.address_db import fake_address_db
 from src.models.customer import Customer, CustomerIn
@@ -87,18 +88,22 @@ def update_customer(id: int, customer: CustomerIn) -> dict:
     Returns:
         dict: customers information
     """
-    updated_user = customer.dict()
-    for user in fake_customer_db:
+    updated_customer = customer.dict()
+    for index, user in enumerate(fake_customer_db):
         if user['id'] == id:
-            user_address = user['address_id']
-            user = updated_user
-            user['address']['id']= user_address
-            user['id'] = id
+            address_id = user['address_id']
+            fake_customer_db[index] = updated_customer
+            fake_customer_db[index]['address']['id'] = address_id
+            fake_customer_db[index]['id'] = id
+            user['address_id'] = address_id
             updated_address = user['address']
-            for address in fake_address_db:
-                if address['id'] == user_address:
-                    address = updated_address
-            return user
+            for index, customer_address in enumerate(fake_address_db):
+                if customer_address['id'] == address_id:
+                    fake_address_db[index] = updated_address
+                    fake_address_db[index]['id'] = address_id
+            
+            return fake_customer_db[index]  
+
 
 def delete_customer(id: int) -> dict:
     """
@@ -119,9 +124,11 @@ def delete_customer(id: int) -> dict:
             for address in fake_address_db:
                 if address["id"] == address_id:
                     deleted_address = address
-                    del address
+                    fake_address_db.remove(address)
             deleted_customer = customer
             deleted_customer['id'] = id
-            deleted_customer['address_id'] = deleted_address
-            del customer
+            deleted_customer['address'] = deleted_address
+            del deleted_customer['address_id']
+            fake_customer_db.remove(customer)
+
             return deleted_customer
