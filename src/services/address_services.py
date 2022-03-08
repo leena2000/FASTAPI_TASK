@@ -5,13 +5,13 @@ from src.models.address import Address, AddressIn
 def create_address(address: AddressIn) -> dict:
     """
     Create new customer address,
-    return customers addresses information
+    return new customer addresses information
 
     Args:
         address (Address): customer address
 
     Returns:
-        dict: customers addresses information
+        dict: new customer addresses information
     """
     #new address id
     address_id = fake_address_db[-1]['id'] + 1
@@ -30,8 +30,9 @@ def get_customer_address_customer_id(id: int)-> dict:
         id (int): customer id
 
     Returns:
-        dict: customers addresses information for a given customer id
+        dict: customer address information for a given customer id
     """
+    customer_address = None
     for customer in fake_customer_db:
         if customer["id"] == id:
             customer_address = customer['address_id']
@@ -49,6 +50,7 @@ def get_customer_address_address_id(id: int) -> dict:
     Returns:
         dict: customers addresses information for a given address id
     """
+    
     for address in fake_address_db:
         if address["id"] == id:
             return address
@@ -65,14 +67,14 @@ def get_addresses() -> dict:
 def update_customer_address(id: int, address: AddressIn) -> dict:
     """
     Update customer address by a given address id,
-    return customers addresses information
+    return updated customer address information
 
     Args:
         id (int): customer id
         address (AddressIn): customer address
 
     Returns:
-        dict: customers addresses information
+        dict: updated customer address information
     """
     updated_address = address.dict()
     for index, customer_address in enumerate(fake_address_db):
@@ -85,7 +87,7 @@ def delete_customer_address(id: int) -> dict:
     """
     Delete customer address by a given address id,
     delete customer by a given address id,
-    return customers addresses information
+    return deleted customer address information
 
     Args:
         id (int): address id
@@ -93,6 +95,7 @@ def delete_customer_address(id: int) -> dict:
     Returns:
         dict: customers addresses information
     """
+    deleted_address = None
     for address in fake_address_db:
         if address["id"] == id:
             deleted_address = address

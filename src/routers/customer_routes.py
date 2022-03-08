@@ -2,6 +2,7 @@ from typing import List
 from fastapi import APIRouter
 from src.models.customer import Customer, CustomerIn
 from src.services.customer_services import create_customer, get_customers, get_customer_information, update_customer, delete_customer
+from fastapi.exceptions import HTTPException
 
 customer_app = APIRouter()
 
@@ -18,14 +19,26 @@ def get_all_customers():
 # get customer information by customer_id
 @customer_app.get("/{id}", response_model=Customer)
 async def get_customer_information_by_id(id: int):
-    return get_customer_information(id)
+    result = get_customer_information(id)
+    if result is None:
+        raise HTTPException(404, f"customer with id: {id} not found")
+    else: 
+        return result
 
 # update customer information 
 @customer_app.put("/{id}", response_model=Customer)
 def update_customer_information(id: int, customer: CustomerIn):
-    return update_customer(id, customer)
+    result = update_customer(id, customer)
+    if result is None:
+        raise HTTPException(404, f"customer with id: {id} not found")
+    else:
+        return result
 
 # delete customer 
 @customer_app.delete("/{id}", response_model=Customer)
 def delete_customer_by_id(id: int):
-    return delete_customer(id)
+    result = delete_customer(id)
+    if result is None:
+        raise HTTPException(404, f"customer with id: {id} not found")
+    else:
+        return result
