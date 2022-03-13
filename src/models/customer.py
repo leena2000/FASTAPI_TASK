@@ -1,6 +1,7 @@
+from typing import List
 from enum import Enum
 from pydantic import BaseModel
-from src.models.address import Address, AddressIn
+from src.models.address import Address
 
 class Gender(str,Enum):
     male = "male"
@@ -13,7 +14,6 @@ class CustomerIn(BaseModel):
     age: int
     gender: Gender
     adult: bool
-    address: AddressIn
 
     class Config:
         schema_extra = {
@@ -22,17 +22,13 @@ class CustomerIn(BaseModel):
                 "last_name": "Jamal",
                 "age": "30",
                 "gender": "male",
-                "adult": True,
-                "address": {
-                    "phone": "0791234567",
-                    "email": "omar@gmail.com",
-                    "country": "Jordan",
-                    "city": "Amman",
-                    "street": "street"
-                }
+                "adult": True
             }
         }
 
 class Customer(CustomerIn):
     id: int
-    address: Address
+    address: List[Address] = []
+
+    class Config:
+        orm_mode = True
