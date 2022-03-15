@@ -20,3 +20,7 @@ class AddressIn(BaseModel):
 
 class Address(AddressIn):
     id: int
+    customer_id: int
+    
+    class Config:
+        orm_mode = True

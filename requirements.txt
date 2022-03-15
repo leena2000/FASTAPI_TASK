@@ -1,7 +1,15 @@
+alembic==1.7.6
 anyio==3.5.0
 fastapi==0.75.0
+greenlet==1.1.2
 idna==3.3
+importlib-metadata==4.11.2
+importlib-resources==5.4.0
+Mako==1.2.0
+MarkupSafe==2.1.0
 pydantic==1.9.0
 sniffio==1.2.0
+SQLAlchemy==1.4.32
 starlette==0.17.1
 typing_extensions==4.1.1
+zipp==3.7.0

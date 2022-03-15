@@ -1,110 +1,38 @@
-from src.db.address_db import fake_address_db
-from src.db.cutsomer_db import fake_customer_db
+from sqlalchemy.orm import Session
+from src.db.customer_and_address_db import AddressSchema
 from src.models.address import Address, AddressIn
 
-def create_address(address: AddressIn) -> dict:
-    """
-    Create new customer address,
-    return new customer addresses information
+def create_address(db: Session, address: AddressIn, customer_id: int):
+    try:
+        db_address = AddressSchema(phone=address.phone, email=address.email, country=address.country,
+        city=address.city, street=address.street, customer_id=customer_id)
+        db.add(db_address)
+        db.commit()
+        db.refresh(db_address)
+        return db_address
+    except:
+        return None
 
-    Args:
-        address (Address): customer address
-
-    Returns:
-        dict: new customer addresses information
-    """
-    #new address id
-    address_id = fake_address_db[-1]['id'] + 1
-    #create and add address to address table
-    new_address = address.dict()
-    new_address['id'] = address_id
-    fake_address_db.append(new_address)
-    return Address(**new_address)
+def get_customer_address_customer_id(db: Session, id: int, skip: int = 0, limit: int = 100):
+    return db.query(AddressSchema).filter(AddressSchema.customer_id == id).offset(skip).limit(limit).all()
 
 
-def get_customer_address_customer_id(id: int)-> dict:
-    """
-    Return customer address information by a given customer id
+def get_customer_address_address_id(db: Session, id: int):
+    return db.query(AddressSchema).filter(AddressSchema.id == id).first()
 
-    Args:
-        id (int): customer id
+def get_addresses(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(AddressSchema).offset(skip).limit(limit).all()
 
-    Returns:
-        dict: customer address information for a given customer id
-    """
-    customer_address = None
-    for customer in fake_customer_db:
-        if customer["id"] == id:
-            customer_address = customer['address_id']
-    for address in fake_address_db:
-        if address["id"] == customer_address:
-            return address
+def update_customer_address(db:Session, id:int, address:Address):
+    if db.query(AddressSchema.id == id):
+        db.query(AddressSchema).filter(AddressSchema.id == id).update(address.dict(), synchronize_session=False)
+        db.commit()
+        updated = db.query(AddressSchema).filter(AddressSchema.id == id).first()
+        return updated
 
-def get_customer_address_address_id(id: int) -> dict:
-    """
-    Return customer address information by a given address id
-
-    Args:
-        id (int): address id
-
-    Returns:
-        dict: customers addresses information for a given address id
-    """
-    
-    for address in fake_address_db:
-        if address["id"] == id:
-            return address
-
-def get_addresses() -> dict:
-    """
-    Return all customers addresses information
-
-    Returns:
-        dict: customers addresses information
-    """
-    return fake_address_db
-
-def update_customer_address(id: int, address: AddressIn) -> dict:
-    """
-    Update customer address by a given address id,
-    return updated customer address information
-
-    Args:
-        id (int): customer id
-        address (AddressIn): customer address
-
-    Returns:
-        dict: updated customer address information
-    """
-    updated_address = address.dict()
-    for index, customer_address in enumerate(fake_address_db):
-        if customer_address['id'] == id:
-            fake_address_db[index] = updated_address
-            fake_address_db[index]['id'] = id
-            return fake_address_db[index]         
-
-def delete_customer_address(id: int) -> dict:
-    """
-    Delete customer address by a given address id,
-    delete customer by a given address id,
-    return deleted customer address information
-
-    Args:
-        id (int): address id
-
-    Returns:
-        dict: customers addresses information
-    """
-    deleted_address = None
-    for address in fake_address_db:
-        if address["id"] == id:
-            deleted_address = address
-            deleted_address['id'] = id
-            fake_address_db.remove(address)
-            
-    for customer in fake_customer_db:
-        if customer["id"] == id:
-            fake_customer_db.remove(customer)
-            
-    return deleted_address
-    
+def delete_customer_address(db: Session, id: int):
+    if db.query(AddressSchema).filter(AddressSchema.id == id).first() is None:
+        return None
+    db.query(AddressSchema).filter(AddressSchema.id == id).delete()
+    db.commit()        
+    return f"deleted address {id} for customer successfully"
