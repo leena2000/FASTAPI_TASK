@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from src.db.customer_and_address_db import CustomerSchema
+from src.db.customer_and_address_db import AddressSchema, CustomerSchema
 from src.models.customer import Customer
 
 def create_customer(db: Session, customer: Customer):
@@ -24,7 +24,9 @@ def update_customer(db: Session, id:int, customer: Customer):
         return updated
 
 def delete_customer(db: Session, id: int):
-    if CustomerSchema.id == id:
-        db.query(CustomerSchema).filter(CustomerSchema.id == id).delete()
-        db.commit()
-        return f"deleted customer {id} successfully"
+    if db.query(CustomerSchema).filter(CustomerSchema.id == id).first() is None:
+        return None
+    db.query(AddressSchema).filter(AddressSchema.customer_id == id).delete()
+    db.query(CustomerSchema).filter(CustomerSchema.id == id).delete()
+    db.commit()
+    return f"deleted customer {id} successfully"

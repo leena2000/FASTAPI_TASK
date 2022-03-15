@@ -23,16 +23,15 @@ def create_new_address(customer_id: int, address: AddressIn, db: Session = Depen
     if result is None:
         raise HTTPException(404, f"customer with id: {customer_id} not found")
     else:
-        return 
+        return result
 
 # get customer address by customer id
 @address_app.get("/customer/{id}", response_model=List[Address])
 def get_customer_address_by_customer_id(id: int,skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    result = get_customer_address_customer_id(db, id, skip=skip, limit=limit)
-    if result is None:
+    customer_addresses = get_customer_address_customer_id(db, id, skip=skip, limit=limit)
+    if len(customer_addresses) == 0:
         raise HTTPException(404, f"customer with id: {id} not found")
-    else:
-        return 
+    return customer_addresses
 
 # get customer address by address id
 @address_app.get("/{id}", response_model=Address)
@@ -41,7 +40,7 @@ def get_customer_address_by_address_id(id: int, db: Session = Depends(get_db)):
     if result is None:
         raise HTTPException(404, f"address with id: {id} not found")
     else:
-        return 
+        return result
 
 @address_app.get("/", response_model=List[Address])
 def get_all_addresses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -50,17 +49,17 @@ def get_all_addresses(skip: int = 0, limit: int = 100, db: Session = Depends(get
 # update address 
 @address_app.put("/{id}", response_model=Address)
 def update_customer_address_by_id(id: int, address: AddressIn, db: Session = Depends(get_db)):
-    result = update_customer_address(db=db, id=id, address=address)
-    if result is None:
+    updated = update_customer_address(db=db, id=id, address=address)
+    if updated is None:
         raise HTTPException(404, f"address with id: {id} not found")
     else:
-        return 
+        return updated
 
 # delete address
 @address_app.delete("/{id}")
 def delete_customer_address_by_id(id: int, db: Session = Depends(get_db)):
-    result = delete_customer_address(db, id)
-    if result is None:
+    deleted = delete_customer_address(db, id)
+    if deleted is None:
         raise HTTPException(404, f"address with id: {id} not found")
     else:
-        return 
+        return deleted

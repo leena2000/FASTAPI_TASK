@@ -33,23 +33,23 @@ def get_customer_information_by_id(id: int, db:Session = Depends(get_db)):
     if result is None:
         raise HTTPException(404, f"customer with id: {id} not found")
     else:
-        return 
+        return result
 
 # update customer information 
 @customer_app.put("/{id}", response_model=Customer)
 def update_customer_information(id: int, customer: CustomerIn, db:Session = Depends(get_db)):
-    result = update_customer(db, id, customer)
-    if result is None:
+    updated = update_customer(db, id, customer)
+    if updated is None:
         raise HTTPException(404, f"customer with id: {id} not found")
     else:
-        return
+        return updated
 
 # delete customer 
 @customer_app.delete("/{id}")
 def delete_customer_by_id(id: int, db:Session = Depends(get_db)):
-    result = delete_customer(db, id)
-    if result is None:
-        raise HTTPException(404, f"address with id: {id} not found")
+    deleted = delete_customer(db, id)
+    if deleted is None:
+        raise HTTPException(404, f"customer with id: {id} not found")
     else:
-        return 
+        return deleted
     
