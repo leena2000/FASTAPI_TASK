@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
 from src.services.customer_services import create_customer, get_customers, get_customer_information, update_customer, delete_customer
@@ -28,7 +29,7 @@ def get_all_customers(skip: int = 0, limit: int = 100, db: Session = Depends(get
 
 # get customer information by customer_id
 @customer_app.get("/{id}", response_model=Customer)
-def get_customer_information_by_id(id: int, db:Session = Depends(get_db)):
+def get_customer_information_by_id(id: UUID, db:Session = Depends(get_db)):
     result = get_customer_information(db, id)
     if result is None:
         raise HTTPException(404, f"customer with id: {id} not found")
@@ -37,7 +38,7 @@ def get_customer_information_by_id(id: int, db:Session = Depends(get_db)):
 
 # update customer information 
 @customer_app.put("/{id}", response_model=Customer)
-def update_customer_information(id: int, customer: CustomerIn, db:Session = Depends(get_db)):
+def update_customer_information(id: UUID, customer: CustomerIn, db:Session = Depends(get_db)):
     updated = update_customer(db, id, customer)
     if updated is None:
         raise HTTPException(404, f"customer with id: {id} not found")
@@ -46,8 +47,8 @@ def update_customer_information(id: int, customer: CustomerIn, db:Session = Depe
 
 # delete customer 
 @customer_app.delete("/{id}")
-def delete_customer_by_id(id: int, db:Session = Depends(get_db)):
-    deleted = delete_customer(db, id)
+def delete_customer_by_id(id: UUID, db:Session = Depends(get_db)):
+    deleted = delete_customer(db, id=str(id))
     if deleted is None:
         raise HTTPException(404, f"customer with id: {id} not found")
     else:

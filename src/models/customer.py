@@ -1,5 +1,6 @@
 from typing import List
 from enum import Enum
+from uuid import UUID
 from pydantic import BaseModel
 from src.models.address import Address
 
@@ -27,7 +28,7 @@ class CustomerIn(BaseModel):
         }
 
 class Customer(CustomerIn):
-    id: int
+    id: UUID
     address: List[Address] = []
 
     class Config:

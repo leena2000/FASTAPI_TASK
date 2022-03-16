@@ -1,3 +1,4 @@
+from uuid import UUID
 from pydantic import BaseModel
 
 class AddressIn(BaseModel):
@@ -19,8 +20,9 @@ class AddressIn(BaseModel):
         }
 
 class Address(AddressIn):
-    id: int
-    customer_id: int
+    id: UUID
+    customer_id:UUID
     
     class Config:
         orm_mode = True
+        

@@ -14,12 +14,15 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/fastapi
 
   db:
+    image: postgres
     volumes:
       - /app:${PWD}
-    image: postgres
     ports: 
       - 5432:5432 # HOST:CONTAINER
     environment:
       - POSTGRES_PASSWORD=postgres #required variable
       - POSTGRES_USER=postgres #optional
       - POSTGRES_DB=fastapi #optional
+
+# volumes:
+#   postgres-data:
