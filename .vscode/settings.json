@@ -8,5 +8,7 @@
         "pydantic",
         "Sadaa",
         "Salwa"
-    ]
+    ],
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true
 }

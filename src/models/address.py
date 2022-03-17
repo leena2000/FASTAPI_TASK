@@ -1,4 +1,6 @@
+from uuid import UUID
 from pydantic import BaseModel
+
 
 class AddressIn(BaseModel):
     phone: int
@@ -8,7 +10,7 @@ class AddressIn(BaseModel):
     street: str
 
     class Config:
-        schema_extra =  {
+        schema_extra = {
             "example": {
                 "phone": "0791234567",
                 "email": "omar@gmail.com",
@@ -18,9 +20,10 @@ class AddressIn(BaseModel):
             }
         }
 
+
 class Address(AddressIn):
-    id: int
-    customer_id: int
-    
+    id: UUID
+    customer_id: UUID
+
     class Config:
         orm_mode = True

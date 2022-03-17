@@ -1,0 +1,28 @@
+version: '3' # version of docker compose services
+
+services:
+  web:
+    build: .
+    command: bash -c "alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload"
+    depends_on:
+      - db
+    volumes:
+      - /app:${PWD}
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/fastapi
+
+  db:
+    image: postgres
+    volumes:
+      - /app:${PWD}
+    ports: 
+      - 5432:5432 # HOST:CONTAINER
+    environment:
+      - POSTGRES_PASSWORD=postgres #required variable
+      - POSTGRES_USER=postgres #optional
+      - POSTGRES_DB=fastapi #optional
+
+# volumes:
+#   postgres-data:
