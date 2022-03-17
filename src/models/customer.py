@@ -4,7 +4,8 @@ from uuid import UUID
 from pydantic import BaseModel
 from src.models.address import Address
 
-class Gender(str,Enum):
+
+class Gender(str, Enum):
     male = "male"
     female = "female"
 
@@ -26,6 +27,7 @@ class CustomerIn(BaseModel):
                 "adult": True
             }
         }
+
 
 class Customer(CustomerIn):
     id: UUID

@@ -1,9 +1,5 @@
 FROM python
 
-# Set environment varibles
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
 # set working directory
 WORKDIR /app
 
