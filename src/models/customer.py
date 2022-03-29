@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 from pydantic import BaseModel
 from src.models.address import Address, AddressIn
 
@@ -13,7 +14,7 @@ class CustomerIn(BaseModel):
     age: int
     gender: Gender
     adult: bool
-    address: AddressIn
+    address: Optional[AddressIn]
 
     class Config:
         schema_extra = {

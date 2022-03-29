@@ -1,8 +1,12 @@
 from typing import List
+
 from fastapi import APIRouter
-from src.models.address import Address, AddressIn
-from src.services.address_services import create_address, get_customer_address_customer_id,get_customer_address_address_id, get_addresses, update_customer_address, delete_customer_address
 from fastapi.exceptions import HTTPException
+from src.models.address import Address, AddressIn
+from src.services.address_services import (
+    create_address, delete_customer_address, get_addresses,
+    get_customer_address_using_address_id, get_customer_address_using_customer_id,
+    update_customer_address)
 
 address_app = APIRouter()
 
@@ -14,7 +18,7 @@ def create_new_address(address: AddressIn):
 # get customer address by customer id
 @address_app.get("/customer/{id}", response_model=Address)
 def get_customer_address_by_customer_id(id: int):
-    result = get_customer_address_customer_id(id)
+    result = get_customer_address_using_customer_id(id)
     if result is None:
         raise HTTPException(404, f"customer with id: {id} not found")
     else:
@@ -23,7 +27,7 @@ def get_customer_address_by_customer_id(id: int):
 # get customer address by address id
 @address_app.get("/{id}", response_model=Address)
 def get_customer_address_by_address_id(id: int):
-    result = get_customer_address_address_id(id)
+    result = get_customer_address_using_address_id(id)
     if result is None:
         raise HTTPException(404, f"address with id: {id} not found")
     else:

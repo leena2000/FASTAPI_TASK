@@ -9,7 +9,8 @@ customer_app = APIRouter()
 # create new customer
 @customer_app.post("/", response_model=Customer)
 def create_new_customer(customer: CustomerIn):
-    return create_customer(customer)
+    customer = create_customer(customer)
+    return customer
 
 # get all customers
 @customer_app.get("/", response_model=List[Customer])
@@ -18,7 +19,7 @@ def get_all_customers():
 
 # get customer information by customer_id
 @customer_app.get("/{id}", response_model=Customer)
-async def get_customer_information_by_id(id: int):
+def get_customer_information_by_id(id: int):
     result = get_customer_information(id)
     if result is None:
         raise HTTPException(404, f"customer with id: {id} not found")

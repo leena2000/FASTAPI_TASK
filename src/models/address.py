@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class AddressIn(BaseModel):
-    phone: int
+    phone: str
     email: str
     country: str
     city: str

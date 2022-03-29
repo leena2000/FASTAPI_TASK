@@ -11,7 +11,7 @@ def create_address(address: AddressIn) -> dict:
         address (Address): customer address
 
     Returns:
-        dict: new customer addresses information
+        Address: new customer addresses information
     """
     #new address id
     address_id = fake_address_db[-1]['id'] + 1
@@ -22,7 +22,7 @@ def create_address(address: AddressIn) -> dict:
     return Address(**new_address)
 
 
-def get_customer_address_customer_id(id: int)-> dict:
+def get_customer_address_using_customer_id(id: int)-> dict:
     """
     Return customer address information by a given customer id
 
@@ -39,8 +39,9 @@ def get_customer_address_customer_id(id: int)-> dict:
     for address in fake_address_db:
         if address["id"] == customer_address:
             return address
+    return None
 
-def get_customer_address_address_id(id: int) -> dict:
+def get_customer_address_using_address_id(id: int) -> dict:
     """
     Return customer address information by a given address id
 
@@ -103,8 +104,8 @@ def delete_customer_address(id: int) -> dict:
             fake_address_db.remove(address)
             
     for customer in fake_customer_db:
-        if customer["id"] == id:
-            fake_customer_db.remove(customer)
+        if customer["address_id"] == id:
+            customer['address_id'] = None
             
     return deleted_address
     

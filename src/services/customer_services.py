@@ -2,7 +2,7 @@ from copy import deepcopy
 from src.db.cutsomer_db import fake_customer_db
 from src.db.address_db import fake_address_db
 from src.models.customer import Customer, CustomerIn
-from src.services.address_services import get_customer_address_customer_id
+from src.services.address_services import get_customer_address_using_customer_id
 
 def create_customer(customer: CustomerIn) -> dict:
     """
@@ -75,6 +75,7 @@ def get_customer_information(id: int) -> dict:
             del result['address_id']
 
             return result
+    return None
     
 
 def update_customer(id: int, customer: CustomerIn) -> dict:
@@ -109,10 +110,9 @@ def update_customer(id: int, customer: CustomerIn) -> dict:
             current_customer = user
     current_customer = updated_customer.copy()
     current_customer['id'] = id
-    address_id = get_customer_address_customer_id(id)['id']
+    address_id = get_customer_address_using_customer_id(id)['id']
     current_customer['address_id'] = address_id
     del current_customer['address']
-    print(current_customer)
     for index, customer_address in enumerate(fake_address_db):
         if customer_address['id'] == address_id:
             fake_address_db[index] = updated_address
